@@ -1,0 +1,4 @@
+@import "tailwindcss";
+
+/* Add this line to enable the plugin */
+@plugin "@tailwindcss/typography";
