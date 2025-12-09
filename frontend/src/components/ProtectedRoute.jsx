@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { Navigate } from "react-router";
 import axios from "axios";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/auth/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, checkingAuth, dispatch } = useContext(AuthContext);

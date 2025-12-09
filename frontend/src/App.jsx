@@ -3,9 +3,12 @@ import Login from "./pages/Login";
 import Registration from "./pages/Registration";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
-import { AuthProvider } from "./context/AuthProvider";
+import { AuthProvider } from "./context/auth/AuthProvider";
+import "./App.css";
+import { ChatProvider } from "./context/chat/ChatProvider";
 
 function App() {
+
   return (
     <AuthProvider>
       <div className="bg-black w-screen h-screen">
@@ -17,7 +20,9 @@ function App() {
             path="/"
             element={
               <ProtectedRoute>
-                <Home />
+                <ChatProvider>
+                  <Home />
+                </ChatProvider>
               </ProtectedRoute>
             }
           />

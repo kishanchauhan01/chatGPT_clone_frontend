@@ -13,7 +13,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/auth/AuthContext";
 
 export default function Login() {
   const navigate = useNavigate();
