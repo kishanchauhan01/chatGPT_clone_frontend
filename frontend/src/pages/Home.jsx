@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github-dark.css";
 import remarkGfm from "remark-gfm";
+import { ChatListContext } from "../context/chatList/ChatListContext";
 
 const Home = () => {
   const [isConnected, setIsConnected] = useState(socket.connected);

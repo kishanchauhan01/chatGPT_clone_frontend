@@ -1,6 +1,7 @@
 export const chatReducer = (state, action) => {
   switch (action.type) {
     case "ADD_MSG":
+      console.log(state);
       return {
         messages: [
           ...state.messages,
@@ -11,6 +12,7 @@ export const chatReducer = (state, action) => {
             status: action.payload.status,
           },
         ],
+        isNewChat: state.messages.length >= 2 ? false : true,
       };
 
     case "APPEND_STREAMING_TEXT": {

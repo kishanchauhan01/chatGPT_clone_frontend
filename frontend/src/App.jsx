@@ -6,9 +6,9 @@ import Home from "./pages/Home";
 import { AuthProvider } from "./context/auth/AuthProvider";
 import "./App.css";
 import { ChatProvider } from "./context/chat/ChatProvider";
+import { ChatListProvider } from "./context/chatList/ChatListProvider";
 
 function App() {
-
   return (
     <AuthProvider>
       <div className="bg-black w-screen h-screen">
@@ -20,9 +20,11 @@ function App() {
             path="/"
             element={
               <ProtectedRoute>
-                <ChatProvider>
-                  <Home />
-                </ChatProvider>
+                <ChatListProvider>
+                  <ChatProvider>
+                    <Home />
+                  </ChatProvider>
+                </ChatListProvider>
               </ProtectedRoute>
             }
           />

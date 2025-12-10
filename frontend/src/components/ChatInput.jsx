@@ -3,11 +3,15 @@ import { ChatContext } from "../context/chat/ChatContext";
 import Send from "../assets/send.png";
 import Stop from "../assets/stop.png";
 import { v4 as uuid } from "uuid";
+import { AuthContext } from "../context/auth/AuthContext";
+import { ChatListContext } from "../context/chatList/ChatListContext";
 
 export default function ChatInput({ isConnected }) {
   const [prompt, setPrompt] = useState("");
 
-  const { aiResponse, dispatch, messages } = useContext(ChatContext);
+  const { aiResponse, dispatch, messages, isNewChat } = useContext(ChatContext);
+  const { user } = useContext(AuthContext);
+  const { currentChatId } = useContext(ChatListContext);
 
   const handleSubmit = () => {
     let userPrompt = prompt;
@@ -24,7 +28,11 @@ export default function ChatInput({ isConnected }) {
     });
     setPrompt("");
 
-    aiResponse(userPrompt, msgId);
+    console.log("is new chat", isNewChat);
+    const userId = !isNewChat && messages.length >= 2 ? null : user._id;
+    const chatId = !isNewChat && currentChatId ? currentChatId : null;
+
+    aiResponse(userPrompt, msgId, userId, chatId);
     console.log("complete");
   };
 

@@ -59,7 +59,7 @@ export const ChatProvider = ({ children }) => {
     };
   }, []);
 
-  const aiResponse = (prompt, chatId) => {
+  const aiResponse = (prompt, msgId, userId, chatId) => {
     dispatch({
       type: "ADD_MSG",
       payload: {
@@ -68,10 +68,16 @@ export const ChatProvider = ({ children }) => {
         status: "streaming",
       },
     });
+    console.log("UserId------", userId);
+    console.log("ChatId------", chatId);
+
     socket.emit("user_message", {
       message: {
         prompt,
-        chatId,
+        msgId,
+        userId,
+        chatId: chatId,
+        isNewChat: state.isNewChat,
       },
     });
   };

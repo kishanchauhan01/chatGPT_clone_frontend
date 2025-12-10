@@ -8,7 +8,6 @@ export const authReducer = (state, action) => {
       };
 
     case "LOGIN_SUCCESS":
-      console.log(action);
       return {
         ...state,
         loading: false,
