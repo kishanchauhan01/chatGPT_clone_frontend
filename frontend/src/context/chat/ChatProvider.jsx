@@ -2,6 +2,8 @@ import { useEffect, useReducer } from "react";
 import { ChatContext } from "./ChatContext";
 import { chatReducer } from "./chatReducer";
 import { socket } from "../../socket";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export const ChatProvider = ({ children }) => {
   /**
@@ -68,8 +70,6 @@ export const ChatProvider = ({ children }) => {
         status: "streaming",
       },
     });
-    console.log("UserId------", userId);
-    console.log("ChatId------", chatId);
 
     socket.emit("user_message", {
       message: {
@@ -82,8 +82,38 @@ export const ChatProvider = ({ children }) => {
     });
   };
 
+  // const handleChatClick = async (chatId) => {
+  //   try {
+  //     const response = await axios.get(
+  //       `http://localhost:8000/api/v1/chats/${chatId}/messages`,
+  //       {
+  //         withCredentials: true,
+  //       }
+  //     );
+
+  //     if (response.data.success) {
+  //       console.log(response.data.data);
+  //       dispatch({
+  //         type: "ADD_ALL_MESSAGES",
+  //         payload: { data: response.data.data },
+  //       });
+  //     } else {
+  //       toast.error(response.data.message, {
+  //         position: "top-right",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error(error.response?.data?.message || error.message, {
+  //       position: "top-right",
+  //     });
+  //   }
+  // };
+
   return (
-    <ChatContext.Provider value={{ ...state, dispatch, aiResponse }}>
+    <ChatContext.Provider
+      value={{ ...state, dispatch, aiResponse }}
+    >
       {children}
     </ChatContext.Provider>
   );

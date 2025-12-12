@@ -2,6 +2,7 @@ import { useEffect, useReducer } from "react";
 import { chatListReducer } from "./chatListReducer";
 import { ChatListContext } from "./ChatListContext";
 import { socket } from "../../socket";
+import { useNavigate } from "react-router";
 
 export const ChatListProvider = ({ children }) => {
   const initialState = {
@@ -9,33 +10,40 @@ export const ChatListProvider = ({ children }) => {
     currentChatId: null,
   };
 
+  const navigate = useNavigate();
+
   const [state, dispatch] = useReducer(chatListReducer, initialState);
+  // console.log(state);
 
   useEffect(() => {
-    function handleNewChatId(newChatId) {
+    function handleNewChatId({ chatId, chatTitle }) {
+      console.log(chatTitle);
       dispatch({
         type: "ADD_CHAT",
         payload: {
-          chatTitle: "test 1",
-          chatId: newChatId,
-          currentChatId: newChatId,
+          chatTitle,
+          chatId,
+          currentChatId: chatId,
         },
       });
     }
 
     // listener for new chatId
-    socket.on("newChatId", handleNewChatId);
+    socket.on("newChat", handleNewChatId);
 
     return () => {
-      socket.off("newChatId", handleNewChatId);
+      socket.off("newChat", handleNewChatId);
     };
   }, []);
 
   useEffect(() => {
     if (state.currentChatId) {
-      window.history.pushState(null, "", `/chat/${state.currentChatId}`);
+      // window.history.pushState(null, "", `/chat/${state.currentChatId}`);
+      navigate(`/chat/${state.currentChatId}`);
+    } else {
+      navigate("/");
     }
-  }, [state.currentChatId]);
+  }, [navigate, state.currentChatId]);
 
   return (
     <ChatListContext.Provider value={{ ...state, dispatch }}>

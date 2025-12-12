@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { ChatContext } from "../context/chat/ChatContext";
 import Send from "../assets/send.png";
 import Stop from "../assets/stop.png";
@@ -8,10 +8,18 @@ import { ChatListContext } from "../context/chatList/ChatListContext";
 
 export default function ChatInput({ isConnected }) {
   const [prompt, setPrompt] = useState("");
+  const textareaRef = useRef(null);
 
   const { aiResponse, dispatch, messages, isNewChat } = useContext(ChatContext);
   const { user } = useContext(AuthContext);
   const { currentChatId } = useContext(ChatListContext);
+
+  useEffect(() => {
+    if (!textareaRef.current) return;
+
+    textareaRef.current.style.height = "auto";
+    textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
+  }, [prompt]);
 
   const handleSubmit = () => {
     let userPrompt = prompt;
@@ -28,25 +36,24 @@ export default function ChatInput({ isConnected }) {
     });
     setPrompt("");
 
-    console.log("is new chat", isNewChat);
     const userId = !isNewChat && messages.length >= 2 ? null : user._id;
     const chatId = !isNewChat && currentChatId ? currentChatId : null;
 
     aiResponse(userPrompt, msgId, userId, chatId);
-    console.log("complete");
   };
 
   return (
     <div className="w-full flex justify-center p-5">
       <div className="w-full max-w-5xl flex items-center bg-[#303030] rounded-xl px-4 py-3 shadow-lg">
-        <input
-          type="text"
+        <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder="Ask anything..."
-          className="flex-1 text-white outline-none text-base"
+          className="flex-1 text-white outline-none text-base bg-transparent resize-none max-h-40 overflow-y-auto"
+          rows={1}
+          ref={textareaRef}
           onKeyDown={async (e) => {
-            if (e.key === "Enter") {
+            if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
               handleSubmit();
             }

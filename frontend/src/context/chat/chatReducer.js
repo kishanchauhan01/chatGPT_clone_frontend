@@ -1,7 +1,6 @@
 export const chatReducer = (state, action) => {
   switch (action.type) {
     case "ADD_MSG":
-      console.log(state);
       return {
         messages: [
           ...state.messages,
@@ -45,9 +44,27 @@ export const chatReducer = (state, action) => {
       };
 
       return {
+        ...state,
         messages,
       };
     }
+
+    case "ADD_ALL_MESSAGES":
+      return {
+        messages: action.payload.data.messages.map((msg) => ({
+          msgId: msg.role === "user" ? msg.id : null,
+          role: msg.role,
+          content: msg.content,
+          state: "complete",
+        })),
+        isNewChat: false,
+      };
+
+    case "RESET_CHAT":
+      return {
+        messages: [],
+        isNewChat: true,
+      };
 
     default:
       return state;

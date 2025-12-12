@@ -1,18 +1,48 @@
 import ChatSidebar from "../components/ChatSidebar";
-import ChatInput from "../components/ChatInput";
 import { useContext, useEffect, useState } from "react";
 import { socket } from "../socket";
-import { ChatContext } from "../context/chat/ChatContext";
-import ReactMarkdown from "react-markdown";
-import rehypeHighlight from "rehype-highlight";
-import "highlight.js/styles/github-dark.css";
-import remarkGfm from "remark-gfm";
 import { ChatListContext } from "../context/chatList/ChatListContext";
+import axios from "axios";
+import { ToastContainer } from "react-toastify";
+import { Outlet, useLocation } from "react-router";
+import { ChatDisplay } from "../components/ChatDisplay";
 
 const Home = () => {
   const [isConnected, setIsConnected] = useState(socket.connected);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const { messages } = useContext(ChatContext);
+  const { dispatch } = useContext(ChatListContext);
+
+  const location = useLocation();
+
+  const isChatRoute = location.pathname.startsWith("/chat/");
+
+  useEffect(() => {
+    async function fetchChat() {
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/api/v1/chats/getAllChats",
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        if (response.data.success) {
+          dispatch({
+            type: "ADD_ALL_CHATS",
+            payload: {
+              data: response.data.data,
+            },
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchChat();
+  }, [dispatch]);
 
   useEffect(() => {
     socket.connect();
@@ -35,52 +65,39 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="w-screen h-screen bg-[#212121] flex">
+    <div className="w-screen h-screen bg-[#212121] flex flex-col md:flex-row">
+      <ToastContainer />
+      {/* Hamburger (Mobile Only) */}
+      <button
+        className="md:hidden text-white absolute top-4 left-4 z-50 p-2 bg-[#303030] rounded-lg"
+        onClick={() => setIsSidebarOpen(true)}
+      >
+        ☰
+      </button>
+
       {/* Sidebar */}
-      <div className="w-[20%] h-full">
-        <ChatSidebar />
-      </div>
+      <>
+        {/* Backdrop for mobile */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm md:hidden z-40"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
 
-      {/* Main Chat Area */}
-      <div className="w-[80%] h-full text-white flex flex-col">
-        {/* Scrollable Messages Section */}
-        <div className="w-full flex-1 overflow-y-auto chatgpt-scrollbar px-5 py-10">
-          {/* Center Column Like ChatGPT */}
-          <div className="max-w-5xl w-full mx-auto flex flex-col gap-6">
-            {/* USER MESSAGE */}
-
-            {messages.map((msg, index) =>
-              msg.role === "user" ? (
-                <div
-                  key={index}
-                  className="self-end bg-[#303030] text-white px-4 py-3 rounded-xl max-w-[75%] wrap-break-word"
-                >
-                  {msg.content}
-                </div>
-              ) : (
-                <div
-                  key={index}
-                  className="self-start  text-white px-4 py-3  max-w-none wrap-break-words prose prose-invert"
-                >
-                  <ReactMarkdown
-                    rehypePlugins={rehypeHighlight}
-                    remarkPlugins={remarkGfm}
-                  >
-                    {msg.content}
-                  </ReactMarkdown>
-                </div>
-              )
-            )}
-
-            {/* ASSISTANT MESSAGE */}
-          </div>
+        {/* Sidebar */}
+        <div
+          className={`fixed md:static top-0 left-0 h-full w-[260px] md:w-[22%] lg:w-[20%]
+      bg-black border-r border-[#333] z-50 
+      transform transition-transform duration-300
+      ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+    `}
+        >
+          <ChatSidebar closeSidebar={() => setIsSidebarOpen(false)} />
         </div>
+      </>
 
-        {/* Chat Input */}
-        <div className="w-full mt-auto">
-          <ChatInput isConnected={isConnected} />
-        </div>
-      </div>
+      {isChatRoute ? <Outlet /> : <ChatDisplay isConnected={isConnected} />}
     </div>
   );
 };

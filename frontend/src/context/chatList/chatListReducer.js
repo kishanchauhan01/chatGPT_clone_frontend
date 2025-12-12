@@ -20,6 +20,20 @@ export const chatListReducer = (state, action) => {
         ),
       };
 
+    case "ADD_ALL_CHATS":
+      return {
+        chatList: action.payload.data.map((chat) => ({
+          chatId: chat._id,
+          chatTitle: chat.chatTitle,
+        })),
+      };
+
+    case "SET_CURRENT_CHAT":
+      return {
+        ...state,
+        currentChatId: action.payload?.chatId ?? null,
+      };
+
     default:
       return state;
   }

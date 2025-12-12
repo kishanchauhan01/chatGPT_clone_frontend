@@ -17,7 +17,7 @@ import { AuthContext } from "../context/auth/AuthContext";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { user, login, loading } = useContext(AuthContext);
+  const { login, loading } = useContext(AuthContext);
 
   const formik = useFormik({
     initialValues: {
@@ -34,11 +34,8 @@ export default function Login() {
 
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        // console.log(values);
         const response = await login(values);
 
-        // console.log("Login Success", response.data);
-        console.log("state", user);
         toast.success(response.msg, {
           position: "top-right",
         });

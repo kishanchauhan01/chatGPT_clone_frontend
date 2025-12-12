@@ -7,6 +7,7 @@ import { AuthProvider } from "./context/auth/AuthProvider";
 import "./App.css";
 import { ChatProvider } from "./context/chat/ChatProvider";
 import { ChatListProvider } from "./context/chatList/ChatListProvider";
+import { ChatDisplay } from "./components/ChatDisplay";
 
 function App() {
   return (
@@ -27,7 +28,9 @@ function App() {
                 </ChatListProvider>
               </ProtectedRoute>
             }
-          />
+          >
+            <Route path="chat/:chatId" element={<ChatDisplay />} />
+          </Route>
         </Routes>
       </div>
     </AuthProvider>
