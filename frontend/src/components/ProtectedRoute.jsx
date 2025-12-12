@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { Navigate } from "react-router";
-import axios from "axios";
+import axiosInstance from "../axios";
 import { AuthContext } from "../context/auth/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
@@ -13,8 +13,8 @@ const ProtectedRoute = ({ children }) => {
           type: "LOGIN_START",
         });
 
-        const res = await axios.get(
-          "http://localhost:8000/api/v1/auth/isLoggedIn",
+        const res = await axiosInstance.get(
+          "/api/v1/auth/isLoggedIn",
           { withCredentials: true }
         );
 

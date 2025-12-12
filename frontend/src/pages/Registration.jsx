@@ -9,7 +9,7 @@ import Link from "@mui/material/Link"; // Use MUI Link
 import { Link as RouterLink, useNavigate } from "react-router"; // Correct import for router
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
+import axiosInstance from "../axios";
 import CircularProgress from "@mui/material/CircularProgress";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -46,7 +46,7 @@ export default function Registration() {
         onSubmit: async (values, { setSubmitting, resetForm }) => {
             try {
                 console.log(values);
-                const response = await axios.post(
+                const response = await axiosInstance.post(
                     "http://localhost:8000/api/v1/auth/register",
                     values,
                     {

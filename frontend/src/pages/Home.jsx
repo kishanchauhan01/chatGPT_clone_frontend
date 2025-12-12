@@ -2,7 +2,7 @@ import ChatSidebar from "../components/ChatSidebar";
 import { useContext, useEffect, useState } from "react";
 import { socket } from "../socket";
 import { ChatListContext } from "../context/chatList/ChatListContext";
-import axios from "axios";
+import axiosInstance from "../axios";
 import { ToastContainer } from "react-toastify";
 import { ChatDisplay } from "../components/ChatDisplay";
 import { Route, Routes } from "react-router";
@@ -16,7 +16,7 @@ const Home = () => {
     async function fetchChat() {
       
       try {
-        const response = await axios.get(
+        const response = await axiosInstance.get(
           "http://localhost:8000/api/v1/chats/getAllChats",
           {
             withCredentials: true,
@@ -39,7 +39,7 @@ const Home = () => {
     }
 
     fetchChat();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     socket.connect();

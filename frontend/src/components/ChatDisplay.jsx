@@ -7,7 +7,7 @@ import { AuthContext } from "../context/auth/AuthContext";
 import { ChatContext } from "../context/chat/ChatContext";
 import ChatInput from "../components/ChatInput";
 import { useLocation, useParams } from "react-router";
-import axios from "axios";
+import axiosInstance from "../axios";
 import { toast } from "react-toastify";
 
 export const ChatDisplay = ({ isConnected }) => {
@@ -40,8 +40,8 @@ export const ChatDisplay = ({ isConnected }) => {
     async function loadChat() {
       dispatch({ type: "RESET_CHAT" });
       try {
-        const response = await axios.get(
-          `http://localhost:8000/api/v1/chats/${chatId}/messages`,
+        const response = await axiosInstance.get(
+          `/api/v1/chats/${chatId}/messages`,
           { withCredentials: true }
         );
 
@@ -76,6 +76,9 @@ export const ChatDisplay = ({ isConnected }) => {
           {messages.length === 0 ? (
             <h2 className="text-3xl flex justify-center items-center h-100">
               😀 How can I help you today! {user.username}
+              <br />
+              <br />
+              Under devlopment but still you can test it 😋
             </h2>
           ) : null}
           {messages.map((msg, index) =>

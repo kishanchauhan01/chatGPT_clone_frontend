@@ -1,6 +1,6 @@
 import { useReducer } from "react";
 import { authReducer } from "./authReducer";
-import axios from "axios";
+import axiosInstance from "../../axios";
 import { AuthContext } from "./AuthContext";
 
 export const AuthProvider = ({ children }) => {
@@ -21,8 +21,8 @@ export const AuthProvider = ({ children }) => {
         type: "LOGIN_START",
       });
 
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/auth/login",
+      const response = await axiosInstance.post(
+        "/api/v1/auth/login",
         values,
         {
           withCredentials: true,

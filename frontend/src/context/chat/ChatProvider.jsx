@@ -2,7 +2,7 @@ import { useEffect, useReducer } from "react";
 import { ChatContext } from "./ChatContext";
 import { chatReducer } from "./chatReducer";
 import { socket } from "../../socket";
-import axios from "axios";
+import axiosInstance from "../../axios";
 import { toast } from "react-toastify";
 
 export const ChatProvider = ({ children }) => {
@@ -84,8 +84,8 @@ export const ChatProvider = ({ children }) => {
 
   const handleChatClick = async (chatId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:8000/api/v1/chats/${chatId}/messages`,
+      const response = await axiosInstance.get(
+        `/api/v1/chats/${chatId}/messages`,
         {
           withCredentials: true,
         }

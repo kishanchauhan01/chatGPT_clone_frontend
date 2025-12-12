@@ -54,7 +54,7 @@ const ChatSidebar = () => {
         });
       }
     }
-  }, [location.pathname, dispatch]); 
+  }, [location.pathname, dispatch, currentChatId]); 
 
   return (
     <>
