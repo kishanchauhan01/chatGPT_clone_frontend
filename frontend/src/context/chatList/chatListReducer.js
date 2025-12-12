@@ -22,6 +22,7 @@ export const chatListReducer = (state, action) => {
 
     case "ADD_ALL_CHATS":
       return {
+        ...state,
         chatList: action.payload.data.map((chat) => ({
           chatId: chat._id,
           chatTitle: chat.chatTitle,
@@ -31,7 +32,7 @@ export const chatListReducer = (state, action) => {
     case "SET_CURRENT_CHAT":
       return {
         ...state,
-        currentChatId: action.payload?.chatId ?? null,
+        currentChatId: action.payload,
       };
 
     default:

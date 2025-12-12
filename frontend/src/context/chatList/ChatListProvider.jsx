@@ -10,9 +10,8 @@ export const ChatListProvider = ({ children }) => {
     currentChatId: null,
   };
 
-  const navigate = useNavigate();
-
   const [state, dispatch] = useReducer(chatListReducer, initialState);
+  const navigate = useNavigate();
   // console.log(state);
 
   useEffect(() => {
@@ -23,9 +22,15 @@ export const ChatListProvider = ({ children }) => {
         payload: {
           chatTitle,
           chatId,
-          currentChatId: chatId,
         },
       });
+
+      dispatch({
+        type: "SET_CURRENT_CHAT",
+        payload: null,
+      });
+
+      navigate(`/chat/${chatId}`, { state: { fromSocket: true } });
     }
 
     // listener for new chatId
@@ -34,16 +39,7 @@ export const ChatListProvider = ({ children }) => {
     return () => {
       socket.off("newChat", handleNewChatId);
     };
-  }, []);
-
-  useEffect(() => {
-    if (state.currentChatId) {
-      // window.history.pushState(null, "", `/chat/${state.currentChatId}`);
-      navigate(`/chat/${state.currentChatId}`);
-    } else {
-      navigate("/");
-    }
-  }, [navigate, state.currentChatId]);
+  }, [navigate ]);
 
   return (
     <ChatListContext.Provider value={{ ...state, dispatch }}>

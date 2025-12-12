@@ -51,6 +51,7 @@ export const chatReducer = (state, action) => {
 
     case "ADD_ALL_MESSAGES":
       return {
+        ...state,
         messages: action.payload.data.messages.map((msg) => ({
           msgId: msg.role === "user" ? msg.id : null,
           role: msg.role,

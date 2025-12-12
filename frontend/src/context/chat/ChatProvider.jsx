@@ -82,37 +82,37 @@ export const ChatProvider = ({ children }) => {
     });
   };
 
-  // const handleChatClick = async (chatId) => {
-  //   try {
-  //     const response = await axios.get(
-  //       `http://localhost:8000/api/v1/chats/${chatId}/messages`,
-  //       {
-  //         withCredentials: true,
-  //       }
-  //     );
+  const handleChatClick = async (chatId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/v1/chats/${chatId}/messages`,
+        {
+          withCredentials: true,
+        }
+      );
 
-  //     if (response.data.success) {
-  //       console.log(response.data.data);
-  //       dispatch({
-  //         type: "ADD_ALL_MESSAGES",
-  //         payload: { data: response.data.data },
-  //       });
-  //     } else {
-  //       toast.error(response.data.message, {
-  //         position: "top-right",
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error(error.response?.data?.message || error.message, {
-  //       position: "top-right",
-  //     });
-  //   }
-  // };
+      if (response.data.success) {
+        console.log(response.data.data);
+        dispatch({
+          type: "ADD_ALL_MESSAGES",
+          payload: { data: response.data.data },
+        });
+      } else {
+        toast.error(response.data.message, {
+          position: "top-right",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message || error.message, {
+        position: "top-right",
+      });
+    }
+  };
 
   return (
     <ChatContext.Provider
-      value={{ ...state, dispatch, aiResponse }}
+      value={{ ...state, dispatch, aiResponse, handleChatClick }}
     >
       {children}
     </ChatContext.Provider>

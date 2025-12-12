@@ -12,27 +12,25 @@ import { ChatDisplay } from "./components/ChatDisplay";
 function App() {
   return (
     <AuthProvider>
-      <div className="bg-black w-screen h-screen">
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Registration />} />
+      <ChatListProvider>
+        <ChatProvider>
+          <div className="bg-black w-screen h-screen">
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Registration />} />
 
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <ChatListProvider>
-                  <ChatProvider>
+              <Route
+                path="/*"
+                element={
+                  <ProtectedRoute>
                     <Home />
-                  </ChatProvider>
-                </ChatListProvider>
-              </ProtectedRoute>
-            }
-          >
-            <Route path="chat/:chatId" element={<ChatDisplay />} />
-          </Route>
-        </Routes>
-      </div>
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </div>
+        </ChatProvider>
+      </ChatListProvider>
     </AuthProvider>
   );
 }

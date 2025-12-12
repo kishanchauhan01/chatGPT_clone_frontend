@@ -6,7 +6,7 @@ import { useContext, useEffect, useRef } from "react";
 import { AuthContext } from "../context/auth/AuthContext";
 import { ChatContext } from "../context/chat/ChatContext";
 import ChatInput from "../components/ChatInput";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -15,47 +15,57 @@ export const ChatDisplay = ({ isConnected }) => {
   const { user } = useContext(AuthContext);
   const messagesEndRef = useRef(null);
 
-  const chatId = useParams();
-  console.log(chatId.chatId);
+  const { chatId } = useParams();
+  const location = useLocation();
 
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  });
+  }, [messages]);
 
   useEffect(() => {
-    async function loadChat() {
-      if (chatId.chatId) {
-        try {
-          console.log(chatId.chatId);
-          const response = await axios.get(
-            `http://localhost:8000/api/v1/chats/${chatId.chatId}/messages`,
-            { withCredentials: true }
-          );
+    if (!chatId) {
+      dispatch({
+        type: "RESET_CHAT",
+      });
+      return;
+    }
 
-          if (response.data.success) {
-            // console.log(response.data.data);
-            dispatch({
-              type: "ADD_ALL_MESSAGES",
-              payload: { data: response.data.data },
-            });
-          } else {
-            toast.error(response.data.message, {
-              position: "top-right",
-            });
-          }
-        } catch (error) {
-          console.log(error);
-          toast.error(error.response?.data?.message || error.message, {
+    if (location.state?.fromSocket) {
+      window.history.replaceState({}, document.title);
+      return;
+    }
+
+    async function loadChat() {
+      dispatch({ type: "RESET_CHAT" });
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/v1/chats/${chatId}/messages`,
+          { withCredentials: true }
+        );
+
+        if (response.data.success) {
+          // console.log(response.data.data);
+          dispatch({
+            type: "ADD_ALL_MESSAGES",
+            payload: { data: response.data.data },
+          });
+        } else {
+          toast.error(response.data.message, {
             position: "top-right",
           });
         }
+      } catch (error) {
+        console.log(error);
+        toast.error(error.response?.data?.message || error.message, {
+          position: "top-right",
+        });
       }
     }
 
     loadChat();
-  }, [chatId, dispatch]);
+  }, [chatId, dispatch, location.state?.fromSocket]);
 
   return (
     <div className="flex-1 h-[80vh] md:h-full text-white flex flex-col">
