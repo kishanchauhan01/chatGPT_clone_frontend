@@ -47,7 +47,7 @@ export default function Registration() {
             try {
                 console.log(values);
                 const response = await axiosInstance.post(
-                    "http://localhost:8000/api/v1/auth/register",
+                    "/api/v1/auth/register",
                     values,
                     {
                         withCredentials: true,

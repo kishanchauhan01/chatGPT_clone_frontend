@@ -17,7 +17,7 @@ const Home = () => {
       
       try {
         const response = await axiosInstance.get(
-          "http://localhost:8000/api/v1/chats/getAllChats",
+          "/api/v1/chats/getAllChats",
           {
             withCredentials: true,
             headers: { "Content-Type": "application/json" },
